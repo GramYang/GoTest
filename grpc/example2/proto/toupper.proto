@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package proto;
+
+// The service definition.
+service ToUpper{
+  // Sends a greeting
+  rpc Upper (UpperRequest) returns (UpperReply) {}
+}
+
+// The request message
+message UpperRequest {
+  string name = 1;
+}
+
+// The response message
+message UpperReply {
+  string message = 1;
+}
