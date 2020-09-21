@@ -171,7 +171,7 @@ func (t *Table2Struct) camelCase(name string) string {
 		}
 	}
 	//首字母大写
-	return strings.ToUpper(text[0:1]) + strings.ToLower(text[1:])
+	return text
 }
 
 func tab(depth int) string {
