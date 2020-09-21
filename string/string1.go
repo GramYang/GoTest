@@ -6,53 +6,23 @@ import (
 )
 
 func main() {
-	//对字符串字符下标的测试
-	fmt.Println(test1("game#0@nmsl"))
-	//对字符串默认值的测试，字符串不会等于nil，只会等于""
-	test2()
-	//string转rune
-	test3()
-	//修改字符串中的一个字符
-	test4()
-	//用切片获取子字符串
-	test5()
-	//遍历字符串字符
-	test6()
+	st1()
 }
 
-func test1(s string) string {
-	return s[:strings.Index(s, "#")]
-}
-
-func test2() {
-	var s1 string
-	var s2 = ""
-	fmt.Println(s1)
-	fmt.Println(s2)
-	//fmt.Println(s1 == nil)
-}
-
-func test3() {
-	s := "aaaa"
-	t := []rune(s)
-	fmt.Println(t)
-}
-
-func test4() {
-	str := "hello"
-	c := []byte(str)
-	c[0] = 'c'
-	fmt.Println(string(c))
-}
-
-func test5() {
-	str := "hello"
-	fmt.Println(str[0:3])
-}
-
-func test6() {
-	str := "hello"
-	for k, v := range str {
-		fmt.Printf("%d : %d\n", k, v)
-	}
+func st1() {
+	//string引用规则测试
+	s1 := "nmsl"
+	s2 := s1
+	fmt.Printf("%p %p\n", &s1, &s2) //指针不同
+	s1 += "孙笑川"
+	fmt.Println(s1, s2) //nmsl孙笑川 nmsl
+	//string拼接
+	s3 := "你妈"
+	s4 := "死了"
+	var buf strings.Builder
+	_, _ = buf.WriteString(s3)
+	_, _ = buf.WriteString(s4)
+	_, _ = buf.WriteString("效率最高")
+	fmt.Println(s3+s4+"效率低", fmt.Sprintf("%s+%s效率低", s3, s4),
+		strings.Join([]string{s3, s4}, "数组专用"), buf.String())
 }

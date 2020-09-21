@@ -5,8 +5,7 @@ import (
 	"time"
 )
 
-//goroutine中运行方法
-//看来和a是值类型还是指针类型无关，和方法的接受者是值类型还是指针类型有关
+//goroutine也是一个闭包
 func main() {
 	a := &ABC{1}
 	go a.counting1()

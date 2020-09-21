@@ -9,12 +9,14 @@ import (
 	"net/http"
 	"reflect"
 	"strings"
+	"time"
 )
 
 func main() {
 	get()
 	do()
 	post()
+	transport()
 }
 
 func get() {
@@ -103,6 +105,29 @@ func post() {
 	resp, err := http.Post("http://www.maimaiche.com/loginRegister/login.do",
 		"application/x-www-form-urlencoded",
 		strings.NewReader("mobile=xxxxxxxxxx&isRemberPwd=1"))
+	//resp, err := http.PostForm("http://example.com/form",
+	//	url.Values{"key": {"Value"}, "id": {"123"}})
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(string(body))
+}
+
+func transport() {
+	tr := &http.Transport{
+		MaxIdleConns:       10,
+		IdleConnTimeout:    30 * time.Second,
+		DisableCompression: true,
+	}
+	client := &http.Client{Transport: tr}
+	resp, err := client.Get("https://example.com")
 	if err != nil {
 		fmt.Println(err)
 		return

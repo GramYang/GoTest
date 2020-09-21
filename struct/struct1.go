@@ -19,6 +19,8 @@ func main() {
 	fmt.Println(ms2)
 	fmt.Println(ms3)
 	//输出{0 }，这说明结构体的默认值为其中元素的默认值的结构体集合
+	b := &bag{}
+	fmt.Println(b) //&{[] map[] <nil> <nil> <nil>}
 }
 
 func modify1(m myStruct) {
@@ -28,4 +30,12 @@ func modify1(m myStruct) {
 //只有指针类型才能修改
 func modify2(m *myStruct) {
 	m.name = m.name + "nmsl"
+}
+
+type bag struct {
+	A []int
+	B map[int]string
+	C chan int
+	D interface{}
+	E func(int) int
 }

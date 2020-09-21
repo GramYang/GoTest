@@ -30,6 +30,12 @@ func test1() {
 	fmt.Println(c)               //[]
 	fmt.Println("len: ", len(c)) //0
 	fmt.Println("cap: ", cap(c)) //10
+	fmt.Println(c == nil)        //false
+	var d []int
+	fmt.Println(d)        //[]
+	fmt.Println(len(d))   //0
+	fmt.Println(cap(d))   //0
+	fmt.Println(d == nil) //true
 }
 
 func test2() {

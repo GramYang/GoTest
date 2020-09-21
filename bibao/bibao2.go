@@ -6,7 +6,7 @@ import "fmt"
 func main() {
 	//闭包：带函数中的函数带return
 	//testBibao1()
-	//闭包引用
+	//闭包引用，说明了闭包持有的是指针而不是值
 	//testBibao2()
 	//循环闭包
 	//testBibao3()
@@ -18,7 +18,7 @@ func main() {
 
 func testBibao1() {
 	i := incr()
-	//一个闭包，三次调用，闭包是可以修改外部引用变量的
+	//一个闭包，三次调用，闭包是可以修改外部引用变量（基本类型）
 	fmt.Println(i()) //1
 	fmt.Println(i()) //2
 	fmt.Println(i()) //3

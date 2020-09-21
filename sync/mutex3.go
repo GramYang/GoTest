@@ -23,6 +23,7 @@ func main() {
 			time.Sleep(time.Second)
 		}
 		a.m.Unlock()
+		//a.m.Unlock()//连续解锁两次会panic
 		wg.Done()
 	}()
 	go func() {

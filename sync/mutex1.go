@@ -9,9 +9,9 @@ import (
 
 func main() {
 	//mutex用法
-	//test1()
+	test1()
 	//第二个测试的输出值恒定为1000，互斥锁指针传递进goroutine，或者限制原生线程数为1
-	test2()
+	//test2()
 	//稳定，用的atomic，不用互斥锁
 	//test3()
 }

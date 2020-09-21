@@ -11,11 +11,11 @@ func main() {
 	test1()
 }
 
-var file string = "example.go"
+var file string = "main.go"
 
 func test1() {
-	_,err := parser.ParseFile(token.NewFileSet(),file,nil,parser.DeclarationErrors)
-	if err !=nil {
+	_, err := parser.ParseFile(token.NewFileSet(), file, nil, parser.DeclarationErrors)
+	if err != nil {
 		fmt.Printf("ParseFile(%s): %v", file, err)
 	}
 }

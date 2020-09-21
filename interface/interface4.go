@@ -5,8 +5,12 @@ import (
 	"reflect"
 )
 
-//证明接口引用的类型是指针类型
 func main() {
+	//证明接口引用的类型是指针类型
+	interfacetype_test()
+}
+
+func interfacetype_test() {
 	var x CCC = &BBB{24} //这里的CCC必须是指针类型，不能是值类型
 	var m = map[string]CCC{}
 	m["nmsl"] = &BBB{24}

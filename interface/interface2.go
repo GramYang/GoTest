@@ -5,7 +5,7 @@ import (
 	"reflect"
 )
 
-//接口类型可以自由转换，这是golang的特点或者说是缺陷
+//接口类型可以由interface{}自由转换。
 func main() {
 	var b IB
 	var a = IA(b)

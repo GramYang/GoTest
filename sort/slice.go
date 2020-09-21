@@ -11,4 +11,11 @@ func main() {
 		return a[i] < a[j]
 	})
 	fmt.Println(a)
+	b := []string{"abc1", "abc3", "abc2"}
+	sort.Strings(b)
+	fmt.Println(b) //[abc1 abc2 abc3]
+	b1 := []string{"abc1", "a3", "b2"}
+	sort.Strings(b1)
+	fmt.Println(b1) //[a3 abc1 b2]
+
 }
