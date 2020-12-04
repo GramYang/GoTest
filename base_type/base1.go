@@ -9,7 +9,8 @@ func main() {
 	//基本类型转换测试
 	//test1()
 	//int32负值测试
-	test2()
+	//test2()
+	t3()
 }
 
 func test1() {
@@ -25,4 +26,8 @@ func test1() {
 func test2() {
 	a := -1
 	fmt.Println(int32(a)) //-1
+}
+
+func t3() {
+	fmt.Println(-1 << 31)
 }

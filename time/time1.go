@@ -32,19 +32,16 @@ func test1() {
 	fmt.Println(date1)                                  //2019-11-29 16:18:03.7328353 +0800 CST
 	fmt.Println(now.Format("2006-01-02 15:04:05"))      //2019-11-29 16:21:15
 	//"2006-01-02 15:04:05"是固定写法，不是golang的诞生时间，只是简单的1234567
-	fmt.Println(now.Format("2006/01/02 15:04:05")) //2019/11/29 16:21:38
-	fmt.Println(now.Format(".20060102"))           //.20200630
-	fmt.Println(now.Format(".20060102.150405"))    //.2020630.150644
-	fmt.Println(now.Nanosecond(), now.Unix())      //508046200 1593942253
-	fmt.Println(time.Unix(now.Unix(), 0))          //2020-07-05 17:50:39 +0800 CST
-	fmt.Println("time.Unix: ", time.Unix(1596108152461/1000, 0))
+	fmt.Println(now.Format("2006/01/02 15:04:05"))               //2019/11/29 16:21:38
+	fmt.Println(now.Format(".20060102"))                         //.20200630
+	fmt.Println(now.Format(".20060102.150405"))                  //.2020630.150644
+	fmt.Println(now.Nanosecond(), now.Unix())                    //508046200 1593942253
+	fmt.Println(time.Unix(now.Unix(), 0))                        //2020-07-05 17:50:39 +0800 CST
+	fmt.Println("time.Unix: ", time.Unix(1596108152461/1000, 0)) //time.Unix:  2020-07-30 19:22:32 +0800 CST
 	t1 := "2019-01-08 13:50:30"
 	timeTemplate := "2006-01-02 15:04:05"
-	//timeTemplate := "2006/01/02 15:04:05"
-	//timeTemplate := "2006-01-02"
-	//timeTemplate := "15:04:05"
 	stamp, _ := time.ParseInLocation(timeTemplate, t1, time.Local)
-	fmt.Println("timestamp to second:", stamp.Unix())
+	fmt.Println("timestamp to second:", stamp.Unix()) //timestamp to second: 1546926630
 }
 
 func test2() {

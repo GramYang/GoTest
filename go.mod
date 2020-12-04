@@ -21,10 +21,10 @@ require (
 	github.com/devopsfaith/krakend-etcd v0.0.0-20190425091451-d989a26508d7
 	github.com/devopsfaith/krakend-opencensus v1.1.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
+	github.com/elastic/go-elasticsearch/v8 v8.0.0-20201007143536-4b4020669208
 	github.com/garyburd/redigo v1.6.0 // indirect
 	github.com/gin-gonic/contrib v0.0.0-20191209060500-d6e26eeaa607
 	github.com/gin-gonic/gin v1.6.2
-	github.com/go-playground/validator/v10 v10.2.0
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang/protobuf v1.3.4
 	github.com/google/btree v1.0.0 // indirect
@@ -33,6 +33,7 @@ require (
 	github.com/gorilla/websocket v1.4.1 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0 // indirect
+	github.com/hashicorp/golang-lru v0.5.4
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/jonboulle/clockwork v0.1.0 // indirect
 	github.com/prometheus/common v0.9.1
@@ -45,7 +46,6 @@ require (
 	go.etcd.io/etcd v3.3.18+incompatible
 	go.uber.org/zap v1.13.0 // indirect
 	golang.org/x/net v0.0.0-20200324143707-d3edc9973b7e
-	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
 	golang.org/x/time v0.0.0-20191024005414-555d28b269f0 // indirect
 	google.golang.org/grpc v1.29.1
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect

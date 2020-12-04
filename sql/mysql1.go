@@ -78,7 +78,7 @@ func useRawBytes(db *sql.DB) {
 func useNullString(db *sql.DB) {
 	//查询
 	rows, err := db.Query("select Sname, Sage from student where Sname = ?", "赵雷")
-	defer rows.Close()
+	defer rows.Close() //根据Close的注释，这里可以有也可以没有，因为Next在返回false后会自动调用Close
 	if err != nil {
 		fmt.Println(err)
 	}

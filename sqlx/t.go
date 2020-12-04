@@ -36,8 +36,8 @@ func main() {
 	//就是sql的Open+Ping
 	db = sqlx.MustConnect(dbname, datasource)
 	//tx:=db.MustBegin()
-	//tx.MustExec("insert into person(first_name,last_name,email) values(?,?,?)","Jason","Moiron","jmoiron@jmoiron.net")
-	//tx.MustExec("insert into person(first_name,last_name,email) values(?,?,?)","John", "Doe", "johndoeDNE@gmail.net")
+	//tx.MustExec("insert into person(first_name,last_name,email) values(?,?,?)","Jason","Moiron","jmoiron@jmoiron.url")
+	//tx.MustExec("insert into person(first_name,last_name,email) values(?,?,?)","John", "Doe", "johndoeDNE@gmail.url")
 	//tx.MustExec("insert into place (country, city, telcode) values (?,?,?)","United States", "New York", "1")
 	//tx.MustExec("insert into place (country, telcode) values (?,?)","Hong Kong", "852")
 	//tx.MustExec("insert into place(country, telcode) values(?,?)","Singapore", "65")
@@ -62,11 +62,10 @@ func main() {
 		}
 	}
 	ts, _ := time.ParseInLocation("2006-01-02 15:04:05", string(timeMap["ts"].([]uint8)), time.Local)
-	fmt.Println("timestamp:", ts.Unix()) //timestamp: 1593913453
+	fmt.Println("timestamp:", ts.Unix()) //timestamp: 1593913453，除了ts，其他的域都不能转成time.Time实例
 	var t Time
 	db.Get(&t, "select ts,d,dt,y,t from `time` where id=1")
-	fmt.Printf("%#v\n", t)
-	//main.Time{Ts:"2020-07-05 09:38:26", D:"2020-07-05", Dt:"2020-07-05 09:38:26", Y:"2020", T:"09:38:26"}
+	fmt.Println(t) //{2020-07-05 09:38:26 2020-07-05 2020-07-05 09:38:26 2020 09:38:26}
 
 	var people []Person
 	//Select用于抓多行数据
@@ -91,7 +90,7 @@ func main() {
 		fmt.Println(err)
 	}
 	fmt.Printf("%#v\n", jason1)
-	//main.Person{FirstName:"Jason", LastName:"Moiron", Email:"jmoiron@jmoiron.net"}
+	//main.Person{FirstName:"Jason", LastName:"Moiron", Email:"jmoiron@jmoiron.url"}
 
 	var places []Place
 	err = db.Select(&places, "select * from place order by telcode asc")
@@ -106,13 +105,16 @@ func main() {
 
 	place := Place{}
 	rows, err = db.Queryx("select * from place")
-	for rows.Next() {
-		err := rows.StructScan(&place)
-		if err != nil {
-			fmt.Println(err)
+	if rows != nil {
+		for rows.Next() {
+			err := rows.StructScan(&place)
+			if err != nil {
+				fmt.Println(err)
+			}
+			fmt.Printf("%#v\n", place)
 		}
-		fmt.Printf("%#v\n", place)
 	}
+
 	//main.Place{Country:"United States", City:sql.NullString{String:"New York", Valid:true}, TelCode:1}
 	//main.Place{Country:"Hong Kong", City:sql.NullString{String:"", Valid:false}, TelCode:852}
 	//main.Place{Country:"Singapore", City:sql.NullString{String:"", Valid:false}, TelCode:65}

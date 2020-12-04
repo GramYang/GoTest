@@ -14,7 +14,9 @@ func main() {
 	//结构体里面map初始化测试，结构体中的map必须单独make
 	//test4()
 	//遍历修改map里的值
-	t5()
+	//t5()
+	//map和*map函数传参的区别，同slice，不过map没有append
+	t6()
 }
 
 func test1() {
@@ -89,6 +91,7 @@ func t5() {
 	//	}
 	//}
 	//上面的写法是不能修改map的，下面的写法可以修改，但是map的key顺序会变
+	//因为程序执行过程中map的长度会变化，为了map值的正确，go语言不允许直接修改map中的值类型结构。
 	for k, v := range m1 {
 		if k == "1" {
 			delete(m1, k)
@@ -99,4 +102,16 @@ func t5() {
 		}
 	}
 	fmt.Println(m1)
+}
+
+func t6() {
+	a := map[int]int{1: 1, 2: 2}
+	b := map[int]int{3: 3, 4: 4}
+	op1(a, &b)
+	fmt.Println(a, b) //map[1:101 2:2] map[3:103 4:4]
+}
+
+func op1(a map[int]int, b *map[int]int) {
+	a[1] += 100
+	(*b)[3] += 100
 }

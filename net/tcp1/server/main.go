@@ -10,7 +10,7 @@ func main() {
 	addr := ":8080"
 	tcpAddr, err := net.ResolveTCPAddr("tcp", addr)
 	if err != nil {
-		fmt.Printf("net.ResolveTCPAddr failed:%s", addr)
+		fmt.Printf("url.ResolveTCPAddr failed:%s", addr)
 		return
 	}
 	listener, err := net.ListenTCP("tcp", tcpAddr)

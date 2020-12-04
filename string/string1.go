@@ -16,6 +16,8 @@ func st1() {
 	fmt.Printf("%p %p\n", &s1, &s2) //指针不同
 	s1 += "孙笑川"
 	fmt.Println(s1, s2) //nmsl孙笑川 nmsl
+	fmt.Printf("%p\n", &s1)
+	//s1虽然修改了，但是s1的指针仍然没有变。但是这个例子仍然不能说明golang没有常量池，因为string有可能只是一个封装。
 	//string拼接
 	s3 := "你妈"
 	s4 := "死了"

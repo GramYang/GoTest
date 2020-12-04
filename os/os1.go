@@ -147,7 +147,7 @@ func test5() {
 }
 
 func test6() {
-	// 简单地以只读的方式打开
+	// 简单地以只读的方式打开，其路径是根路径，且不能带/
 	file, err := os.Open("test.txt")
 	if err != nil {
 		fmt.Println(err)
