@@ -2,19 +2,22 @@ package main
 
 import (
 	"fmt"
+	"reflect"
 	"time"
 )
 
 //time包常规操作
 func main() {
 	//打印当前时间，time.Unix测试
-	test1()
+	//test1()
 	//一次定时器，有三种实现形式
 	//test2()
 	//循环定时器
 	//test3()
 	//Duration是指定的参数类型，由int64转换而来，time.Unix测试
 	//test4()
+	//判断time.Time的空值
+	t5()
 }
 
 func test1() {
@@ -77,4 +80,22 @@ func test4() {
 	t1 := t % time.Second
 	t2 := t - t1
 	fmt.Printf("%d %d", t1, t2) //0 70000000000
+}
+
+type timeWrap struct {
+	A int
+	B time.Time
+}
+
+func t5() {
+	t := &timeWrap{}
+	fmt.Println(t.A == 0)           //true
+	fmt.Println(t.B == time.Time{}) //true
+	var t1 timeWrap
+	fmt.Println(t1.A == 0)           //true
+	fmt.Println(t1.B == time.Time{}) //true
+	if (t1.B == time.Time{}) {
+		fmt.Println("equal") //equal
+	}
+	fmt.Println(reflect.ValueOf(t1.B).Interface() == reflect.ValueOf(time.Time{}).Interface()) //true
 }

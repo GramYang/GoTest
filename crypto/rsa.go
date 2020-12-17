@@ -23,9 +23,8 @@ func RsaDecrypt(src []byte, key string) ([]byte, error) {
 		return nil, errors.New("decode pem failure")
 	}
 	privateKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
-	result, err := rsa.DecryptPKCS1v15(rand.Reader, privateKey, src)
 	if err != nil {
 		return nil, err
 	}
-	return result, nil
+	return rsa.DecryptPKCS1v15(rand.Reader, privateKey, src)
 }

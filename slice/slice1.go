@@ -18,7 +18,9 @@ func main() {
 	//如果是interface{}时，看似不带...可以编译通过，其实是错误的。相当于用interface{}指代[]interface{}
 	//t5()
 	//[]int和*[]int函数传参的区别，可以看出：下标寻址都是一样的，但是append只有*[]int会有效
-	t6()
+	//t6()
+	//测试append创建新切片，但是底层的数组是一样的。测试结果：假的，根本不需要append
+	t7()
 }
 
 func test1() {
@@ -124,4 +126,20 @@ func op1(a []int, b *[]int) {
 	(*b)[0] += 100
 	a = append(a, 200)
 	*b = append(*b, 200)
+}
+
+func t7() {
+	arr := make([]*bag7, 10)
+	arr[0] = &bag7{}
+	op2(arr)
+	fmt.Println(arr[0].A) //100
+}
+
+type bag7 struct {
+	A int
+}
+
+func op2(x []*bag7) {
+	x = append([]*bag7{}, x...) //这一句可以不要
+	x[0].A = 100
 }

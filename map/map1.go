@@ -7,7 +7,7 @@ import (
 
 func main() {
 	//基本使用
-	//test1()
+	test1()
 	//测试map是指针类型
 	//test2()
 	//test3()
@@ -16,7 +16,7 @@ func main() {
 	//遍历修改map里的值
 	//t5()
 	//map和*map函数传参的区别，同slice，不过map没有append
-	t6()
+	//t6()
 }
 
 func test1() {
@@ -30,6 +30,7 @@ func test1() {
 	fmt.Println(v == "", ok)                    //true false
 	m3 := map[string]string{"a": "b", "c": "d"} //另一种初始化方法
 	fmt.Println(m3["a"], m3["c"])
+	fmt.Println(m3["z"] == "") //true
 	var m4 map[int]string
 	fmt.Println(m4)        //map[]
 	fmt.Println(len(m4))   //0
@@ -44,6 +45,12 @@ func test1() {
 	m6["34"] = []int{}
 	fmt.Println(m6)              //map[12:[0 0 0 0 0] 34:[] nmsl:[1 2 3 4]]
 	fmt.Println(m6["34"] == nil) //false
+	m7 := make(map[string]interface{})
+	m7["a"] = "a"
+	m7["b"] = 1
+	fmt.Println(m7["c"] == nil) //true
+	m8 := map[int]string{}
+	fmt.Println(m8 == nil) //false
 }
 
 func test2() {

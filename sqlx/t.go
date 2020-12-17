@@ -41,6 +41,7 @@ func main() {
 	//tx.MustExec("insert into place (country, city, telcode) values (?,?,?)","United States", "New York", "1")
 	//tx.MustExec("insert into place (country, telcode) values (?,?)","Hong Kong", "852")
 	//tx.MustExec("insert into place(country, telcode) values(?,?)","Singapore", "65")
+	// Named queries can use structs, so if you have an existing struct (i.e. person := &Person{}) that you have populated, you can pass it in as &person
 	//tx.NamedExec("INSERT INTO person (first_name, last_name, email) VALUES (:first_name, :last_name, :email)",
 	//	&Person{"Jane", "Citizen", "jane.citzen@example.com"})
 	//tx.Commit()
@@ -122,6 +123,8 @@ func main() {
 	fmt.Println(place)
 	//{United States {New York true} 1}
 
+	// Named queries, using `:name` as the bindvar.  Automatic bindvar support
+	// which takes into account the dbtype based on the driverName on sqlx.Open/Connect
 	//_, err=db.NamedExec(`insert into person(first_name,last_name,email) values(:first,:last,:email)`, map[string]interface{}{
 	//	"first":"Bin",
 	//	"last":"Smuth",

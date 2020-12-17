@@ -33,10 +33,10 @@ func cors() gin.HandlerFunc {
 			//  header的类型
 			c.Header("Access-Control-Allow-Headers", "Authorization, Content-Length, X-CSRF-Token, Token,session,X_Requested_With,Accept, Origin, Host, Connection, Accept-Encoding, Accept-Language,DNT, X-CustomHeader, Keep-Alive, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type, Pragma,signature")
 			//              允许跨域设置                                                                                                      可以返回其他子段
-			c.Header("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers,Cache-Control,Content-Language,Content-Type,Expires,Last-Modified,Pragma,FooBar") // 跨域关键设置 让浏览器可以解析
-			c.Header("Access-Control-Max-Age", "172800")                                                                                                                                                           // 缓存请求信息 单位为秒
-			c.Header("Access-Control-Allow-Credentials", "true")                                                                                                                                                   //  跨域请求是否需要带cookie信息 默认设置为true
-			c.Set("content-type", "application/json")                                                                                                                                                              // 设置返回格式是json
+			c.Header("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers,Cache-Control,Content-Language,Content-Type,Content-Disposition,Expires,Last-Modified,Pragma,FooBar") // 跨域关键设置 让浏览器可以解析
+			c.Header("Access-Control-Max-Age", "172800")                                                                                                                                                                               // 缓存请求信息 单位为秒
+			c.Header("Access-Control-Allow-Credentials", "true")                                                                                                                                                                       //  跨域请求是否需要带cookie信息 默认设置为true
+			c.Set("content-type", "application/json")                                                                                                                                                                                  // 设置返回格式是json
 		}
 
 		//放行所有OPTIONS方法
@@ -74,6 +74,12 @@ func main() {
 			fmt.Println(err)
 		}
 		fmt.Println(j)
+		if j.A == 114514 {
+			c.JSON(500, gin.H{
+				"message": "1919810",
+			})
+			return
+		}
 		c.JSON(200, gin.H{
 			"message": "success",
 		})
@@ -84,11 +90,11 @@ func main() {
 		if err != nil {
 			fmt.Println(err)
 		}
-		data, err := gc.RsaDecrypt(j.Data, "crypto/key/rsa_2048_priv.pem")
+		data, err := gc.RsaDecrypt(j.Data, "crypto/key/priv.pem")
 		if err != nil {
 			fmt.Println(err)
 		}
-		fmt.Println(string(data))
+		fmt.Println("rsa: " + string(data))
 	})
 	r.GET("/paramencode", func(c *gin.Context) {
 		sig := c.GetHeader("signature")
@@ -108,6 +114,16 @@ func main() {
 		c.JSON(200, gin.H{
 			"message": "ok",
 		})
+	})
+	r.GET("/download_test", func(c *gin.Context) {
+		fileName := "ctwing.xlsx"
+		c.Header("Content-Disposition", "attachment;filename="+fileName)
+		c.Header("Content-Type", "application/.nmsl")
+		c.File("gin/" + fileName)
+	})
+	r.POST("/upload_test", func(c *gin.Context) {
+		file, _ := c.FormFile("file")
+		fmt.Println(file.Filename)
 	})
 	r.Run(":8090")
 }

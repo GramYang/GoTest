@@ -14,6 +14,10 @@ func main() {
 	//test2()
 	//稳定，用的atomic，不用互斥锁
 	//test3()
+	//死锁
+	mtt4()
+	//测试mutex的特性，当一个goroutine占用锁时，另一个goroutine会等待
+	mtt5()
 }
 
 type counter struct {
@@ -77,4 +81,60 @@ func test3() {
 	}
 	wg.Wait()
 	fmt.Println("数数：", a)
+}
+
+type Value struct {
+	mu    sync.Mutex
+	value int
+}
+
+var wg sync.WaitGroup
+
+func printSum(v1, v2 *Value) {
+	defer wg.Done()
+	v1.mu.Lock()
+	defer v1.mu.Unlock()
+	time.Sleep(2 * time.Second)
+	v2.mu.Lock()
+	defer v2.mu.Unlock()
+	fmt.Printf("sum=%v\n", v1.value+v2.value)
+}
+
+func mtt4() {
+	var a, b Value
+	wg.Add(2)
+	go printSum(&a, &b)
+	go printSum(&b, &a)
+	wg.Wait()
+}
+
+type aaa struct {
+	mount int
+	m     sync.Mutex
+}
+
+func mtt5() {
+	a := &aaa{mount: 10}
+	var wg sync.WaitGroup
+	wg.Add(2)
+	go func() {
+		a.m.Lock()
+		for i := 0; i < a.mount; i++ {
+			fmt.Printf("线程1数数：%d\n", i)
+			time.Sleep(time.Second)
+		}
+		a.m.Unlock()
+		//a.m.Unlock()//连续解锁两次会panic
+		wg.Done()
+	}()
+	go func() {
+		a.m.Lock()
+		for i := 0; i < a.mount; i++ {
+			fmt.Printf("线程2数数：%d\n", i)
+			time.Sleep(time.Second)
+		}
+		a.m.Unlock()
+		wg.Done()
+	}()
+	wg.Wait()
 }

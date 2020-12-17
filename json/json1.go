@@ -21,9 +21,9 @@ type personInfo1 struct {
 
 func main() {
 	//正常的json与结构体序列化和反序列化
-	//t1()
+	t1()
 	//json反序列化测试，用map
-	t2()
+	//t2()
 	//json数组与map的转化
 	//t3()
 	//json数组与map的转化2
@@ -49,7 +49,7 @@ func t1() {
 	fmt.Printf("%+v\n", p1) //{Name:Piao Email:piaoyunsoft@163.com C:}
 
 	// 反序列化
-	res, err := simplejson.NewJson([]byte(data))
+	res, err := simplejson.NewJson(data)
 	if err != nil {
 		fmt.Println("err: ", err)
 	} else {
@@ -76,6 +76,19 @@ func t1() {
 	bb.H = 123
 	data1, _ := json.Marshal(&bb)
 	fmt.Println(string(data1)) //匿名的内嵌结构体的json只有一层，除非你是非匿名内嵌结构体
+	var bs []*bag
+	for i := 0; i < 10; i++ {
+		bs = append(bs, b)
+	}
+	data2, _ := json.Marshal(bs)
+	fmt.Println(string(data2)) //很长的json数组
+	var bs1 []*bag
+	_ = json.Unmarshal(data2, &bs1)
+	fmt.Println(len(bs1), bs1[0].A) //10 nmsl
+	var bs2 []map[string]interface{}
+	_ = json.Unmarshal(data2, &bs2)
+	data3, _ := json.Marshal(bs2[0])
+	fmt.Println(string(data3)) //json数组被拆分了
 }
 
 type bag struct {
