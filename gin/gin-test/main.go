@@ -8,7 +8,9 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"path"
 	"strings"
+	"time"
 )
 
 const md5Key = "cqdq_iot"
@@ -28,15 +30,19 @@ func cors() gin.HandlerFunc {
 			headerStr = "access-control-allow-origin, access-control-allow-headers"
 		}
 		if origin != "" {
-			c.Header("Access-Control-Allow-Origin", origin)                                    // 这是允许访问所有域
-			c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE,UPDATE") //服务器支持的所有跨域请求的方法,为了避免浏览次请求的多次'预检'请求
-			//  header的类型
+			//允许访问origin的域
+			c.Header("Access-Control-Allow-Origin", origin)
+			//指定允许请求方法
+			c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE,UPDATE")
+			//指定允许request中的头
 			c.Header("Access-Control-Allow-Headers", "Authorization, Content-Length, X-CSRF-Token, Token,session,X_Requested_With,Accept, Origin, Host, Connection, Accept-Encoding, Accept-Language,DNT, X-CustomHeader, Keep-Alive, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type, Pragma,signature")
-			//              允许跨域设置                                                                                                      可以返回其他子段
-			c.Header("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers,Cache-Control,Content-Language,Content-Type,Content-Disposition,Expires,Last-Modified,Pragma,FooBar") // 跨域关键设置 让浏览器可以解析
-			c.Header("Access-Control-Max-Age", "172800")                                                                                                                                                                               // 缓存请求信息 单位为秒
-			c.Header("Access-Control-Allow-Credentials", "true")                                                                                                                                                                       //  跨域请求是否需要带cookie信息 默认设置为true
-			c.Set("content-type", "application/json")                                                                                                                                                                                  // 设置返回格式是json
+			//指定允许response中的头
+			c.Header("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers,Cache-Control,Content-Language,Content-Type,Content-Disposition,Expires,Last-Modified,Pragma,FooBar")
+			//response可以被缓存多久
+			c.Header("Access-Control-Max-Age", "172800")
+			//指示当请求的凭证标记为 true 时，是否响应该请求
+			c.Header("Access-Control-Allow-Credentials", "true")
+			c.Set("content-type", "application/json")
 		}
 
 		//放行所有OPTIONS方法
@@ -66,8 +72,9 @@ func md5encode() string {
 
 func main() {
 	r := gin.Default()
-	r.Use(cors())
+	//r.Use(cors())
 	r.POST("/greet/post", func(c *gin.Context) {
+		fmt.Println(c.Request)
 		var j j
 		err := c.BindJSON(&j)
 		if err != nil {
@@ -75,13 +82,19 @@ func main() {
 		}
 		fmt.Println(j)
 		if j.A == 114514 {
-			c.JSON(500, gin.H{
+			c.JSON(200, gin.H{
 				"message": "1919810",
 			})
 			return
 		}
 		c.JSON(200, gin.H{
 			"message": "success",
+		})
+	})
+	r.GET("/greet/get", func(c *gin.Context) {
+		fmt.Println(c.Request)
+		c.JSON(200, gin.H{
+			"message": "ok",
 		})
 	})
 	r.POST("/rsa", func(c *gin.Context) {
@@ -91,6 +104,18 @@ func main() {
 			fmt.Println(err)
 		}
 		data, err := gc.RsaDecrypt(j.Data, "crypto/key/priv.pem")
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Println("rsa: " + string(data))
+	})
+	r.POST("/rsa1", func(c *gin.Context) {
+		var j j2
+		err := c.BindJSON(&j)
+		if err != nil {
+			fmt.Println(err)
+		}
+		data, err := gc.RsaDecrypt1(j.Data, "crypto/key/priv.pem")
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -122,8 +147,15 @@ func main() {
 		c.File("gin/" + fileName)
 	})
 	r.POST("/upload_test", func(c *gin.Context) {
-		file, _ := c.FormFile("file")
-		fmt.Println(file.Filename)
+		file, _ := c.FormFile("114514")
+		if file != nil {
+			dst := path.Join("gin/", file.Filename+time.Now().Format(".20060102.150405"))
+			fmt.Println(dst)
+			err := c.SaveUploadedFile(file, dst)
+			if err != nil {
+				fmt.Println(err)
+			}
+		}
 	})
 	r.Run(":8090")
 }

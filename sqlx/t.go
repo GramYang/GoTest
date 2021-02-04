@@ -10,6 +10,7 @@ import (
 
 var dbname = "mysql"
 var datasource = "gram:yangshu##8867@tcp(112.74.205.92:3306)/test"
+var dscqdq = "cqdq:cqdq12345@tcp(106.54.87.204:3306)/iot_admin"
 var db *sqlx.DB
 
 type Person struct {
@@ -33,6 +34,13 @@ type Time struct {
 }
 
 func main() {
+	//sqlx使用测试，用的是以前的阿里云服务器，可惜现在已经过期了
+	//t1()
+	//cqdq的云服务器
+	//t2()
+}
+
+func t1() {
 	//就是sql的Open+Ping
 	db = sqlx.MustConnect(dbname, datasource)
 	//tx:=db.MustBegin()
@@ -134,4 +142,57 @@ func main() {
 	//rows,err=db.NamedQuery(`select * from person where first_name=:fn`,map[string]interface{}{"fn":"Bin"})
 	//
 	//rows,err=db.NamedQuery(`select * from person where first_name=:first_name`,jason)
+}
+
+type timebag struct {
+	Id   int    `json:"id" db:"id"`
+	Time string `json:"time" db:"time"`
+}
+
+type timebag1 struct {
+	Id   int   `json:"id" db:"id"`
+	Time int64 `json:"time" db:"time"`
+}
+
+func t2() {
+	db = sqlx.MustConnect(dbname, dscqdq)
+	//db.MustExec("insert into test.test(time) values(from_unixtime(?))",1593942253)
+	//插入timestamp成功，这说明毫秒数是可以转换成timestamp的，但是需要加上mysql的内置函数from_unixtime
+
+	//报错：mysql的timestamp不能直接映射成time.Time
+	//timestamp只能映射成string，然后由string转换成time.Time
+	var tb timebag
+	err := db.Get(&tb, "select * from test.test where id=?", 1)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(tb) //{1 2020-07-05 17:44:13}，这里可以看出timestamp映射成string的输出格式
+	timeTemplate := "2006-01-02 15:04:05"
+	//为什么解析的只能是string？我猜应该是方便格式多元化的原因吧。
+	stamp, _ := time.ParseInLocation(timeTemplate, tb.Time, time.Local)
+	fmt.Println(stamp) //2020-07-05 17:44:13 +0800 CST，成功
+
+	//将timestamp映射成int64
+	var tb1 timebag1
+	err = db.Get(&tb1, "select id,unix_timestamp(`time`) as `time` from test.test where id=?", 1)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(tb1) //{1 1593942253}
+	db = sqlx.MustConnect(dbname, dscqdq)
+	resMap := map[string]interface{}{}
+	rows, err := db.Queryx("select secret_key as ProductSecret,product_id as ProductId,"+
+		"device_name as DeviceName,device_id as DeviceId from device_detail where device_name=?", "测试119")
+	if rows != nil {
+		for rows.Next() {
+			err = rows.MapScan(resMap)
+		}
+	}
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(string(resMap["ProductId"].([]uint8)), string(resMap["DeviceId"].([]uint8)))
+	//10079997 cb30899f92dc410aa826dd2881351130
+	//注意，用mapscan，map里的所有域都会变成string
 }

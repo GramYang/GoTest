@@ -18,7 +18,9 @@ func main() {
 	//不管是传参还是直接遍历，切片和map都不是指针特性。
 	//但是协程里面就不同了！！切片呈现指针特性，map不是。forrange遍历基础类型的slice和map，协程传参测试。都出错了。
 	//总结一下，forrange里面协程闭包抓值，除了map可以，基本类型、slice、结构体指针都会出错
-	t6()
+	//t6()
+	//一个bug测试，事实证明没有bug
+	t7()
 }
 
 func test1() {
@@ -200,4 +202,25 @@ func op3(a []int, b map[int]string) {
 	} //出现forrange的bug了
 	wg.Wait()
 	fmt.Println("op3 end")
+}
+
+func t7() {
+	var a int
+	var b string
+	var arr []map[string]interface{}
+	arr = append(arr, map[string]interface{}{"a": 10, "b": "abc"}, map[string]interface{}{}, map[string]interface{}{})
+	fmt.Println(arr) //[map[a:10 b:abc] map[] map[]]
+	for k, v := range arr {
+		if k == 0 {
+			a = v["a"].(int)
+			b = v["b"].(string)
+		}
+		if a != 0 {
+			v["a"] = a
+		}
+		if b != "" {
+			v["b"] = b
+		}
+	}
+	fmt.Println(arr) //[map[a:10 b:abc] map[a:10 b:abc] map[a:10 b:abc]]
 }

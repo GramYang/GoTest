@@ -21,13 +21,13 @@ type personInfo1 struct {
 
 func main() {
 	//正常的json与结构体序列化和反序列化
-	t1()
+	//t1()
 	//json反序列化测试，用map
 	//t2()
 	//json数组与map的转化
 	//t3()
 	//json数组与map的转化2
-	//t4()
+	t4()
 }
 
 func t1() {
@@ -49,12 +49,12 @@ func t1() {
 	fmt.Printf("%+v\n", p1) //{Name:Piao Email:piaoyunsoft@163.com C:}
 
 	// 反序列化
-	res, err := simplejson.NewJson(data)
-	if err != nil {
-		fmt.Println("err: ", err)
-	} else {
-		fmt.Printf("%+v\n", res) //&{data:map[age:10 email:piaoyunsoft@163.com name:Piao]}
-	}
+	//res, err := simplejson.NewJson(data)
+	//if err != nil {
+	//	fmt.Println("err: ", err)
+	//} else {
+	//	fmt.Printf("%+v\n", res) //&{data:map[age:10 email:piaoyunsoft@163.com name:Piao]}
+	//}
 	//json的结构体的域必须是public的，当反序列化时json中的值的类型错误或者超越边界值时，会报错但是不会panic，然后给结构体域赋类型默认值
 	b := &bag{A: "nmsl", B: 24, C: 24.4, D: true, E: []int{1, 2, 3, 4}, F: map[int32]string{1: "a", 2: "b", 3: "c"}}
 	data, _ = json.Marshal(b)
@@ -152,10 +152,24 @@ func t3() {
 	//{"query":{"bool":{"must":[{"match":{"description":"channel"}},{"match":{"title": "rust"}}]}}}
 }
 
+type bigbag1 struct {
+	A int
+	B string
+	C map[int]int
+}
+
 func t4() {
 	j := `{"a":"a","b":1,"c":{"c1":"c1","c2":2},"d":2}`
 	var mapJson = make(map[string]interface{})
 	_ = json.Unmarshal([]byte(j), &mapJson)
 	fmt.Println(mapJson)                                                   //map[a:a b:1 c:map[c1:c1 c2:2] d:2]
 	fmt.Println(mapJson["d"], mapJson["c"].(map[string]interface{})["c1"]) //2 c1
+	//json中出现"a":null时怎么处理
+	bb := &bigbag1{A: 1, B: "a", C: nil}
+	data, _ := json.Marshal(bb)
+	fmt.Println(string(data)) //{"A":1,"B":"a","C":null}
+	var mapJson1 = map[string]interface{}{}
+	_ = json.Unmarshal(data, &mapJson1)
+	fmt.Println(mapJson1)             //map[A:1 B:a C:<nil>]
+	fmt.Println(mapJson1["C"] == nil) //true
 }

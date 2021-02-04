@@ -4,7 +4,7 @@ import "fmt"
 
 func main() {
 	//测试切片的赋值，以及切片的清空
-	//test1()
+	test1()
 	//测试切片的函数传递，切片是指针类型，只不过append是特例
 	//append在没有扩容的情况下，会在原来的[]int拼接上值然后返回，
 	//虽然返回的指针是不一样的，append并没有生产一个新的[]int。
@@ -20,7 +20,7 @@ func main() {
 	//[]int和*[]int函数传参的区别，可以看出：下标寻址都是一样的，但是append只有*[]int会有效
 	//t6()
 	//测试append创建新切片，但是底层的数组是一样的。测试结果：假的，根本不需要append
-	t7()
+	//t7()
 }
 
 func test1() {
@@ -43,6 +43,20 @@ func test1() {
 	fmt.Println(len(d))   //0
 	fmt.Println(cap(d))   //0
 	fmt.Println(d == nil) //true
+	c1 := make([]int, 10, 20)
+	fmt.Println(len(c1), cap(c1)) //10 20
+	c1[0], c1[1], c1[2], c1[3], c1[4] = 1, 2, 3, 4, 5
+	c1 = c1[:len(c1):len(c1)]         //这种写法可以让切片的长度等于容量
+	fmt.Println(c1, len(c1), cap(c1)) //[1 2 3 4 5 0 0 0 0 0] 10 10
+	c2 := []int{1, 2, 3, 4}
+	fmt.Println(len(c2), cap(c2)) //4 4
+	c2 = c2[1:2:3]
+	fmt.Println(c2, len(c2), cap(c2)) //[2] 1 2
+	//比较切片是否相等，切片是不能比较的，数组才能比较
+	//c3:=[]int{1,2,3}
+	//c4:=[]int{1,2,3,4}
+	//c5:=[]int{1,2,3}
+	//fmt.Println(c3==c4,c3==c5)
 }
 
 func test2() {

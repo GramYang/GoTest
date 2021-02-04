@@ -8,14 +8,18 @@ func main() {
 }
 
 func f1() {
-	op1()
-	op1(1)
-	op1(1, 2, 3)
+	op1()        //0
+	op1(1)       //1 1
+	op1(1, 2, 3) //3 1 123
 }
 
 func op1(i ...int) {
-	fmt.Println(len(i))
-	for _, v := range i {
-		fmt.Println(v)
+	fmt.Print(len(i), " ")
+	if len(i) > 1 {
+		fmt.Print(i[0], " ")
 	}
+	for _, v := range i {
+		fmt.Print(v)
+	}
+	fmt.Println()
 }

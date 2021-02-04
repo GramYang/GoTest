@@ -17,6 +17,8 @@ func main() {
 	//t5()
 	//map和*map函数传参的区别，同slice，不过map没有append
 	//t6()
+	//报错，因为map可以并发读，但是不能并发写。map并发写不能recover，因为他是被throw，而被throw是不能recover的。
+	//t7()
 }
 
 func test1() {
@@ -24,8 +26,9 @@ func test1() {
 	//m1[1] = "nmsl" //声明的map是nil，不能赋值
 	m2 := make(map[int]string)
 	m2[1] = "nmsl"
-	fmt.Println(m2)
-	fmt.Println(reflect.TypeOf(m2))
+	fmt.Println(m2)                 //map[1:nmsl]
+	fmt.Println(reflect.TypeOf(m2)) //map[int]string
+	fmt.Println(m2[-1] == "")       //true，不存在的key返回的是值类型的默认值
 	v, ok := m2[2]
 	fmt.Println(v == "", ok)                    //true false
 	m3 := map[string]string{"a": "b", "c": "d"} //另一种初始化方法
@@ -49,8 +52,12 @@ func test1() {
 	m7["a"] = "a"
 	m7["b"] = 1
 	fmt.Println(m7["c"] == nil) //true
+	m7 = map[string]interface{}{}
+	fmt.Println(m7) //m7被clear了
 	m8 := map[int]string{}
 	fmt.Println(m8 == nil) //false
+	m9 := make(map[int]int, 5)
+	fmt.Println(len(m9)) //0，这里设置的是map的cap，但是你不能去cap值，所以这个map你设置了map后屁用没有，简直是脑瘫设计
 }
 
 func test2() {
@@ -121,4 +128,30 @@ func t6() {
 func op1(a map[int]int, b *map[int]int) {
 	a[1] += 100
 	(*b)[3] += 100
+}
+
+func t7() {
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println(err)
+		}
+	}()
+
+	var bar = make(map[int]int)
+
+	go func() {
+		defer func() {
+			if err := recover(); err != nil {
+				fmt.Println(err)
+			}
+		}()
+
+		for {
+			_ = bar[1]
+		}
+	}()
+
+	for {
+		bar[1] = 1
+	}
 }

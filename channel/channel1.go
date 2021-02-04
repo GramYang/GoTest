@@ -16,7 +16,7 @@ func main() {
 	//而如果数据类型是默认值为nil之类的，那就正常获取nil。
 	//test1()
 	//用通道传递切片，顺便说一句通道传递的是引用而不是值
-	test2()
+	//test2()
 	//判断通道是否关闭
 	//test3()
 	//M个receivers，一个sender，sender通过关闭data channel说“不再发送”

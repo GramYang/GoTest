@@ -4,7 +4,7 @@ import "fmt"
 
 func main() {
 	//数组的最基本使用，go是没有常量数组的，数组可变
-	//test1()
+	test1()
 	//数组值传递，证明数组是指针类型的
 	//test2()
 }
@@ -18,12 +18,19 @@ func test1() {
 	arr6 := [...]int{8: 1}          //不指定长度，对第9个元素（下标为8）赋值1
 	fmt.Println(arr1, arr2, arr3, arr4, arr5, arr6)
 	//[0 0 0 0 0] [1 2 3 4 5] [1 2 3 0 0] [0 0 0 0 1] [1 2 3 4 5] [0 0 0 0 0 0 0 0 1]
+	a7 := [3]int{1, 2, 3}
+	//a8:=[4]int{1,2,3,4}//不同长度的数组是不能比较的
+	a9 := [3]int{3, 4, 5}
+	a10 := [3]int{3, 1, 2}
+	fmt.Println(a7 == a9, a7 == a10) //false false
 }
 
 func test2() {
 	arr := [5]int{1, 2, 3, 4, 5}
 	modify(arr)
 	fmt.Println("In main(), arr values:", arr)
+	//In modify(), arr values: [10 2 3 4 5]
+	//In main(), arr values: [1 2 3 4 5]
 }
 
 func modify(arr [5]int) {

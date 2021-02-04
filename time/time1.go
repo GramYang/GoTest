@@ -1,15 +1,17 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"reflect"
+	"sync"
 	"time"
 )
 
 //time包常规操作
 func main() {
-	//打印当前时间，time.Unix测试
-	//test1()
+	//打印当前时间，time.Unix测试，time.Time作为结构体域与json的互换
+	test1()
 	//一次定时器，有三种实现形式
 	//test2()
 	//循环定时器
@@ -17,7 +19,13 @@ func main() {
 	//Duration是指定的参数类型，由int64转换而来，time.Unix测试
 	//test4()
 	//判断time.Time的空值
-	t5()
+	//t5()
+	//time延时任务
+	//t6()
+}
+
+type timebag struct {
+	T time.Time
 }
 
 func test1() {
@@ -45,6 +53,18 @@ func test1() {
 	timeTemplate := "2006-01-02 15:04:05"
 	stamp, _ := time.ParseInLocation(timeTemplate, t1, time.Local)
 	fmt.Println("timestamp to second:", stamp.Unix()) //timestamp to second: 1546926630
+	json1 := `{"createTime":1608624760}`
+	var tb timebag
+	_ = json.Unmarshal([]byte(json1), &tb)
+	fmt.Println(tb) //{0001-01-01 00:00:00 +0000 UTC}出错了，不能直接转
+	mapjson1 := map[string]interface{}{}
+	_ = json.Unmarshal([]byte(json1), &mapjson1)
+	mapjson1["createTime"] = time.Unix(int64(mapjson1["createTime"].(float64)/1000), 0)
+	json2, _ := json.Marshal(&mapjson1)
+	fmt.Println(string(json2)) //{"createTime":"1970-01-19T22:50:24+08:00"}
+	var tb1 timebag
+	_ = json.Unmarshal(json2, &tb1)
+	fmt.Println(tb1) //{0001-01-01 00:00:00 +0000 UTC}，看来json下time.Time和int或者string的转换是行不通的
 }
 
 func test2() {
@@ -98,4 +118,19 @@ func t5() {
 		fmt.Println("equal") //equal
 	}
 	fmt.Println(reflect.ValueOf(t1.B).Interface() == reflect.ValueOf(time.Time{}).Interface()) //true
+}
+
+func t6() {
+	//time.AfterFunc使用测试
+	var wg sync.WaitGroup
+	wg.Add(1)
+	time.AfterFunc(time.Second*2, func() {
+		fmt.Println("123")
+		wg.Done()
+	})
+	wg.Wait()
+	//
+	start := time.Now()
+	end := <-time.After(1000 * 1000 * 1000 * 5)
+	fmt.Println(start.Second(), end.Second()) //等5秒后输出59、4，可以看出秒数是60的余数
 }
