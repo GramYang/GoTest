@@ -57,6 +57,15 @@ func test1() {
 	//c4:=[]int{1,2,3,4}
 	//c5:=[]int{1,2,3}
 	//fmt.Println(c3==c4,c3==c5)
+	//测试结构体内的slice域默认初始化的逻辑
+	s := slicebag{a: 10}
+	fmt.Println(s.b == nil) //true
+	fmt.Println(len(s.b))   //0
+}
+
+type slicebag struct {
+	a int
+	b []bool
 }
 
 func test2() {

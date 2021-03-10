@@ -24,10 +24,10 @@ require (
 	github.com/gin-contrib/static v0.0.0-20200916080430-d45d9a37d28e
 	github.com/gin-gonic/contrib v0.0.0-20191209060500-d6e26eeaa607
 	github.com/gin-gonic/gin v1.6.2
+	github.com/go-redis/redis/v8 v8.7.1
 	github.com/go-sql-driver/mysql v1.5.0
-	github.com/golang/protobuf v1.3.4
+	github.com/golang/protobuf v1.4.2
 	github.com/google/btree v1.0.0 // indirect
-	github.com/google/go-cmp v0.4.0 // indirect
 	github.com/google/uuid v1.1.1 // indirect
 	github.com/gorilla/websocket v1.4.1 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.0 // indirect
@@ -44,7 +44,7 @@ require (
 	go.etcd.io/bbolt v1.3.3 // indirect
 	go.etcd.io/etcd v3.3.18+incompatible
 	go.uber.org/zap v1.13.0 // indirect
-	golang.org/x/net v0.0.0-20200324143707-d3edc9973b7e
+	golang.org/x/net v0.0.0-20201202161906-c7110b5ffcbb
 	golang.org/x/time v0.0.0-20191024005414-555d28b269f0 // indirect
 	google.golang.org/grpc v1.29.1
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect

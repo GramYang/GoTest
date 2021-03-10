@@ -72,6 +72,9 @@ func m1() {
 	for k, v := range mapValue.(interface{}).(map[string]userInfo) {
 		fmt.Println(k, v)
 	}
+	//判空
+	var m2 sync.Map
+	fmt.Println(m2.Range)
 }
 
 func testMap1() {

@@ -172,4 +172,13 @@ func t4() {
 	_ = json.Unmarshal(data, &mapJson1)
 	fmt.Println(mapJson1)             //map[A:1 B:a C:<nil>]
 	fmt.Println(mapJson1["C"] == nil) //true
+	//json数组序列化成map时是否能保证顺序
+	j1 := `[{"a":"a"},{"b":"b"},{"c":"c"}]`
+	var mapjson1 = []map[string]interface{}{}
+	_ = json.Unmarshal([]byte(j1), &mapjson1)
+	fmt.Println(mapjson1) //[map[a:a] map[b:b] map[c:c]]
+	j2 := `{"x":[{"a":"a"},{"b":"b"},{"c":"c"}]}`
+	var mapjson2 = map[string]interface{}{}
+	_ = json.Unmarshal([]byte(j2), &mapjson2)
+	fmt.Println(mapjson2) //map[x:[map[a:a] map[b:b] map[c:c]]]
 }
