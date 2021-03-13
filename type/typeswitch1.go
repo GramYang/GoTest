@@ -114,4 +114,16 @@ func ts2() {
 	if ok {
 		fmt.Println(reflect.TypeOf(res3)) //main.Big
 	}
+	//同类型断言测试，传入函数后将其转换为interface{}因此可行，但是s3.(*Big)这是不可行的
+	s3 := &Big{}
+	op1(s3) //ok &{{} {}}
+}
+
+func op1(v interface{}) {
+	v1, ok := v.(*Big)
+	if ok {
+		fmt.Println("ok", v1)
+	} else {
+		fmt.Println("not ok", v1)
+	}
 }

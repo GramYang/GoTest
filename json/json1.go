@@ -27,7 +27,11 @@ func main() {
 	//json数组与map的转化
 	//t3()
 	//json数组与map的转化2
-	t4()
+	//t4()
+	//测试json反序列化成结构体，字段是否必须导出，必须导出！
+	//t5()
+	//json反序列化，内嵌结构体能否是指针，不能！
+	t6()
 }
 
 func t1() {
@@ -181,4 +185,39 @@ func t4() {
 	var mapjson2 = map[string]interface{}{}
 	_ = json.Unmarshal([]byte(j2), &mapjson2)
 	fmt.Println(mapjson2) //map[x:[map[a:a] map[b:b] map[c:c]]]
+}
+
+type bag1 struct {
+	a int
+	B string
+}
+
+func t5() {
+	b1 := &bag1{a: 100, B: "abc"}
+	j, _ := json.Marshal(b1)
+	fmt.Println(string(j)) //{"B":"abc"}
+	var b2 bag1
+	_ = json.Unmarshal(j, &b2)
+	fmt.Println(b2) //{0 abc}
+	//可以看出，json反序列化成结构体实例，域必须导出！
+}
+
+type bag2 struct {
+	B string
+	*bag22
+	C []*bag22
+}
+
+type bag22 struct {
+	A int
+}
+
+func t6() {
+	b1 := &bag2{B: "bbb", bag22: &bag22{A: 10}, C: []*bag22{{A: 100}, {A: 200}}}
+	j1, _ := json.Marshal(b1)
+	fmt.Println(string(j1)) //{"B":"bbb","A":10,"C":[{"A":100},{"A":200}]}
+	var b2 bag2
+	_ = json.Unmarshal(j1, &b2)
+	fmt.Println(b2) //{bbb <nil> [0xc000014238 0xc000014248]}
+	//json反序列成结构体，内嵌结构体不能是指针，只能是值实例
 }

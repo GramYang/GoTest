@@ -6,7 +6,10 @@ import (
 )
 
 func main() {
+	//基本使用
 	test1()
+	//使用set来修改值
+	//t2()
 }
 
 type Wrap struct {
@@ -42,6 +45,7 @@ func test1() {
 	fmt.Println(reflect.ValueOf(s).Interface() == reflect.Zero(reflect.TypeOf(s))) //false
 	//本来类型是interface{}的map或slice是不能比较的，一比较就会panic，但是这里可以比较，因为reflect.Zero(reflect.TypeOf(s))是nil
 	fmt.Println(reflect.TypeOf(m), reflect.ValueOf(m), reflect.ValueOf(m).Kind(), reflect.Zero(reflect.TypeOf(m)))
+	//map[int]string map[1:蔡徐坤 2:孙笑川] map map[]
 	fmt.Println(reflect.ValueOf(m).Interface() == reflect.Zero(reflect.TypeOf(m))) //false
 	//map[int]string map[1:蔡徐坤 2:孙笑川] map map[]
 	//检查bean里面是否有域未被初始化，序列化大型bean时使用
@@ -66,4 +70,25 @@ func test1() {
 			fmt.Println("w有未初始化域")
 		}
 	}
+	//反射判断一个实例是否被初始化
+	w2 := &Wrap{}
+	fmt.Println(reflect.Indirect(reflect.ValueOf(w2)) == reflect.Zero(reflect.TypeOf(Wrap{}))) //false
+	fmt.Println(reflect.Indirect(reflect.ValueOf(w2)), reflect.Zero(reflect.TypeOf(Wrap{})))
+	//{0  [] map[]} {0  [] map[]}
+	//Value是不能相互比较的，只能Interface{}转换后再进行比较
+}
+
+type wrap1 struct {
+	a int
+}
+
+func t2() {
+	var a = 1
+	var b = &wrap1{a: 100}
+	v1 := reflect.Indirect(reflect.ValueOf(&a))
+	v2 := reflect.Indirect(reflect.ValueOf(b))
+	fmt.Println(v1, v2) //1 {100}
+	v1.Set(reflect.ValueOf(100))
+	v2.Set(reflect.ValueOf(wrap1{a: 200}))
+	fmt.Println(a, b) //100 &{200}
 }
